@@ -1,0 +1,22 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "pks-keydo"
+# Note: Version will be 0.0.0 for all local builds.
+# Will be replaced with actual version at build time in CI/CD.
+version = "0.0.0"
+description = "Get things done."
+authors = ["Steve G. <pagekeysolutions@gmail.com>"]
+
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^8.0.0"
+pytest-cov = "^4.1.0"
+
+[tool.poetry.scripts]
+keydo = "pks_keydo.keydo:main"
