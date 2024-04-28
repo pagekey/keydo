@@ -10,8 +10,8 @@ KEYDO_FILE = os.getenv("KEYDO_FILE", "keydo.yaml")
 
 def print_help():
     print("KeyDo Usage")
-    print("n/na/nextaction: manage next actions")
-    print("p/projects: manage projects")
+    print("a/action/actions: manage actions")
+    print("p/project/projects: manage projects")
     print("s/stats: show stats")
 
 if __name__ == "__main__":
@@ -21,11 +21,11 @@ if __name__ == "__main__":
         main_cmd = sys.argv[1]
         if not os.path.exists(KEYDO_FILE):
             with open(KEYDO_FILE, 'w') as f:
-                f.write('next_actions: {}\nprojects: {}\nreference: {}')
+                f.write('actions: {}\nprojects: {}\nreference: {}')
         with open(KEYDO_FILE, 'r') as f:
             config = yaml.safe_load(f)
         if main_cmd in ['s', 'stats']:
-            print(f"{len(config['next_actions'])} next actions")
+            print(f"{len(config['actions'])} next actions")
             print(f"{len(config['projects'])} projects")
             print(f"{len(config['reference'])} reference items")
         elif main_cmd in ['p', 'project', 'projects']:
@@ -48,13 +48,13 @@ if __name__ == "__main__":
                         'name': name,
                         'outcome': outcome,
                         'updated': last_update,
-                        'next_action': None,
+                        'action': None,
                     }
                     with open(KEYDO_FILE, 'w') as f:
                         yaml.safe_dump(config, f)
-        elif main_cmd in ['n', 'na', 'nextaction']:
+        elif main_cmd in ['a', 'action', 'actions']:
             if len(sys.argv) < 3:
-                print("Next Actions subcommands:")
+                print("Actions subcommands:")
                 print("n/new: new action")
                 print("l/list: list actions")
             else:
@@ -62,11 +62,14 @@ if __name__ == "__main__":
                 if subcommand in ['n', 'new']:
                     id = 1
                     name = input("Enter action: ")
-                    project = input("Enter project id: ")
                     context = input("Enter context: ")
-                    if context not in config['next_actions']:
-                        config['next_actions'][context] = {}
-                    config['next_actions'][context][id] = {
+                    print("Projects:")
+                    for project in config['projects'].values():
+                        print(f"{project['id']}) {project['name']}")
+                    project = input("Enter project id or leave blank: ")
+                    if context not in config['actions']:
+                        config['actions'][context] = {}
+                    config['actions'][context][id] = {
                         'id': id,
                         'name': name,
                         'project': project,
@@ -76,7 +79,13 @@ if __name__ == "__main__":
                         yaml.safe_dump(config, f)
                 elif subcommand in ['l', 'list']:
                     print("Next Actions")
-                    for context in config['next_actions'].keys():
-                        print(f"Context: {context} ({len(config['next_actions'][context])})")
-                        for action in config['next_actions'][context].values():
-                            print(f"✅ {action['name']} ({action['project']})")
+                    print()
+                    for context in config['actions'].keys():
+                        print(f"Context: {context} ({len(config['actions'][context])})")
+                        for action in config['actions'][context].values():
+                            if action['project']:
+                                project = config['projects'][action['project']]
+                            else:
+                                project = {'name': ''}
+                            print(f"✅ {action['id']}) {action['name']} ({project['name']})")
+                        print()

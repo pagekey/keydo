@@ -1,15 +1,27 @@
-next_actions:
+actions:
   ? ''
   : 1:
       context: ''
       id: 1
-      name: Jump across fence
+      name: Brush teeth
+      project: ''
+  Laptop:
+    1:
+      context: Laptop
+      id: 1
+      name: Search google for dogs
+      project: 1
+  Phone:
+    1:
+      context: Phone
+      id: 1
+      name: Call doctor
       project: ''
 projects:
   1:
+    action: null
     id: 1
-    name: none
-    next_action: null
-    outcome: none
+    name: Get a dog
+    outcome: Have a dog now
     updated: '2024-04-28'
 reference: {}
