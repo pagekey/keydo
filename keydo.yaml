@@ -1,10 +1,10 @@
 actions:
-  ? ''
-  : 1:
-      context: ''
-      id: 1
-      name: Brush teeth
-      project: ''
+  Home:
+    2:
+      context: Home
+      id: 2
+      name: Do something
+      project: '2'
   Laptop:
     1:
       context: Laptop
@@ -12,10 +12,27 @@ actions:
       name: Search google for dogs
       project: 1
   Phone:
-    1:
+    3:
       context: Phone
       id: 1
       name: Call doctor
+      project: ''
+  default:
+    3:
+      context: default
+      id: 3
+      name: Eat something
+      project: ''
+    4:
+      context: ''
+      id: 1
+      name: Brush teeth
+      project: ''
+  groceries:
+    5:
+      context: groceries
+      id: 1
+      name: Buy cereal
       project: ''
 projects:
   1:
@@ -23,5 +40,11 @@ projects:
     id: 1
     name: Get a dog
     outcome: Have a dog now
+    updated: '2024-04-28'
+  2:
+    action: null
+    id: 2
+    name: Make program
+    outcome: Made the thing
     updated: '2024-04-28'
 reference: {}
