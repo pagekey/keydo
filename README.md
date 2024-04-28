@@ -1,2 +1,3 @@
 # KeyDo
 
+Plaintext task tracker.
