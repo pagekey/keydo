@@ -1,4 +1,10 @@
-next_actions: {}
+next_actions:
+  ? ''
+  : 1:
+      context: ''
+      id: 1
+      name: Jump across fence
+      project: ''
 projects:
   1:
     id: 1

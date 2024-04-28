@@ -10,8 +10,9 @@ KEYDO_FILE = os.getenv("KEYDO_FILE", "keydo.yaml")
 
 def print_help():
     print("KeyDo Usage")
-    print("s/stats: show stats")
+    print("n/na/nextaction: manage next actions")
     print("p/projects: manage projects")
+    print("s/stats: show stats")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -51,3 +52,31 @@ if __name__ == "__main__":
                     }
                     with open(KEYDO_FILE, 'w') as f:
                         yaml.safe_dump(config, f)
+        elif main_cmd in ['n', 'na', 'nextaction']:
+            if len(sys.argv) < 3:
+                print("Next Actions subcommands:")
+                print("n/new: new action")
+                print("l/list: list actions")
+            else:
+                subcommand = sys.argv[2]
+                if subcommand in ['n', 'new']:
+                    id = 1
+                    name = input("Enter action: ")
+                    project = input("Enter project id: ")
+                    context = input("Enter context: ")
+                    if context not in config['next_actions']:
+                        config['next_actions'][context] = {}
+                    config['next_actions'][context][id] = {
+                        'id': id,
+                        'name': name,
+                        'project': project,
+                        'context': context,
+                    }
+                    with open(KEYDO_FILE, 'w') as f:
+                        yaml.safe_dump(config, f)
+                elif subcommand in ['l', 'list']:
+                    print("Next Actions")
+                    for context in config['next_actions'].keys():
+                        print(f"Context: {context} ({len(config['next_actions'][context])})")
+                        for action in config['next_actions'][context].values():
+                            print(f"✅ {action['name']} ({action['project']})")
