@@ -1,9 +1,9 @@
-next_actions: []
+next_actions: {}
 projects:
-- id: 1
-  name: klh
-  updated: '2024-04-28'
-- id: 1
-  name: anotha one
-  updated: '2024-04-28'
-reference: []
+  1:
+    id: 1
+    name: none
+    next_action: null
+    outcome: none
+    updated: '2024-04-28'
+reference: {}

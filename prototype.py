@@ -20,7 +20,7 @@ if __name__ == "__main__":
         main_cmd = sys.argv[1]
         if not os.path.exists(KEYDO_FILE):
             with open(KEYDO_FILE, 'w') as f:
-                f.write('next_actions: []\nprojects: []\nreference: []')
+                f.write('next_actions: {}\nprojects: {}\nreference: {}')
         with open(KEYDO_FILE, 'r') as f:
             config = yaml.safe_load(f)
         if main_cmd in ['s', 'stats']:
@@ -35,16 +35,19 @@ if __name__ == "__main__":
             else:
                 subcommand = sys.argv[2]
                 if subcommand in ['l', 'list']:
-                    for project in config['projects']:
+                    for project in config['projects'].values():
                         print(f"✅⚠ {project['name']} - {project['updated']}")
                 elif subcommand in ['n','new']:
                     id = 1
                     name = input("Enter name of project: ")
+                    outcome = input("Describe desired outcome: ")
                     last_update = datetime.datetime.now().strftime("%Y-%m-%d")
-                    config['projects'].append({
+                    config['projects'][id] = {
                         'id': id,
                         'name': name,
-                        'updated': last_update
-                    })
+                        'outcome': outcome,
+                        'updated': last_update,
+                        'next_action': None,
+                    }
                     with open(KEYDO_FILE, 'w') as f:
                         yaml.safe_dump(config, f)
