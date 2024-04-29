@@ -18,43 +18,48 @@ def set_config(config: dict):
     with open(KEYDO_FILE, 'w') as f:
         yaml.safe_dump(config, f)
 
+def id_exists(collection, id):
+    for item in collection:
+        if item['id'] == id:
+            return True
+    return False
+
 def manage_actions(args, parser):
     config = get_config()
     if args.subcommand in ['n', 'new']:
         id = 1
-        all_actions = {}
-        for context in config['actions'].values():
-            for action in context.values():
-                all_actions[action['id']] = action
-        while id in all_actions:
+        while id_exists(config['actions'], id):
             id += 1
         name = input("Enter action: ")
         context = input("Enter context: ")
         if len(context) < 1:
             context = DEFAULT_CONTEXT
-        if context not in config['actions']:
-            config['actions'][context] = {}
         print("Projects:")
-        for project in config['projects'].values():
+        for project in config['projects']:
             print(f"{project['id']}) {project['name']}")
         project = input("Enter project id or leave blank: ")
-        config['actions'][context][id] = {
+        config['actions'].append({
             'id': id,
             'name': name,
             'project': project,
             'context': context,
-        }
+        })
         set_config(config)
     elif args.subcommand in ['l', 'list']:
         print("Next Actions")
         print()
-        for context in config['actions'].keys():
-            print(f"Context: {context} ({len(config['actions'][context])})")
-            for action in config['actions'][context].values():
+        contexts = set()
+        for action in config['actions']:
+            contexts.add(action['context'])
+        for context in contexts:
+            matches = [x for x in config['actions'] if x['context'] == context]
+            print(f"Context: {context} ({len(matches)})")
+            for action in matches:
+                project = {'name': ''}
                 if action['project']:
-                    project = config['projects'][int(action['project'])]
-                else:
-                    project = {'name': ''}
+                    for p in config['projects']:
+                        if p['id'] == int(action['project']):
+                            project = p
                 print(f"✅ A{action['id']}) {action['name']} ({project['name']})")
             print()
     else:
@@ -64,22 +69,22 @@ def manage_actions(args, parser):
 def manage_projects(args, parser):
     config = get_config()
     if args.subcommand in ['l', 'list']:
-        for project in config['projects'].values():
+        for project in config['projects']:
             print(f"✅ P{project['id']}) {project['name']} - {project['updated']}")
     elif args.subcommand in ['n','new']:
         id = 1
-        while id in config['projects']:
+        while id_exists(config['actions'], id):
             id += 1
         name = input("Enter name of project: ")
         outcome = input("Describe desired outcome: ")
         last_update = datetime.datetime.now().strftime("%Y-%m-%d")
-        config['projects'][id] = {
+        config['projects'].append({
             'id': id,
             'name': name,
             'outcome': outcome,
             'updated': last_update,
             'action': None,
-        }
+        })
         set_config(config)
     else:
         parser.print_help()
@@ -95,7 +100,7 @@ def main():
     if not os.path.exists(KEYDO_FILE):
         print(f"KeyDo file not found at {KEYDO_FILE}, creating...")
         with open(KEYDO_FILE, 'w') as f:
-            f.write('actions: {}\nprojects: {}\nreference: {}')
+            f.write('actions: []\nprojects: []\nreference: []')
 
     parser = argparse.ArgumentParser(description="KeyDo CLI tool")
     subparsers = parser.add_subparsers(title="Commands", dest="command")
