@@ -91,6 +91,37 @@ def show_stats(args, parser):
     print(f"{len(config['projects'])} projects")
     print(f"{len(config['reference'])} reference items")
 
+def run_review(args, parser):
+    config = get_config()
+    print("Weekly Review")
+    print("-------------")
+    print("Action Review")
+    for action in config['actions']:
+        print(action)
+        user_in = None
+        while user_in not in ['y','n']:
+            user_in = input("Delete this action? (y/n) ")
+        if user_in == 'y':
+            pass
+            print("removing")
+        else:
+            pass
+            print("keeping")
+    print()
+    print("Project Review")
+    for project in config['projects']:
+        print(project)
+        user_in = None
+        while user_in not in ['y','n']:
+            user_in = input("Delete this project? (y/n) ")
+        if user_in == 'y':
+            pass
+            print("removing")
+        else:
+            pass
+            print("keeping")
+        ## TODO set next action if not exists
+
 def main():
     if not os.path.exists(KEYDO_FILE):
         print(f"KeyDo file not found at {KEYDO_FILE}, creating...")
@@ -101,26 +132,31 @@ def main():
     subparsers = parser.add_subparsers(title="Commands", dest="command")
 
     # Subparser for managing actions
-    action_parser = subparsers.add_parser("a", aliases=["action"], help="Manage actions")
+    action_parser = subparsers.add_parser("a", aliases=["action", "actions"], help="Manage actions")
     action_subparsers = action_parser.add_subparsers(title="Subcommand", dest="subcommand")
     action_subparsers.add_parser('n', aliases=['new'], help='Create new action')
 
     # Subparser for managing projects
-    project_parser = subparsers.add_parser("p", aliases=["project"], help="Manage projects")
+    project_parser = subparsers.add_parser("p", aliases=["project", "projects"], help="Manage projects")
     project_subparsers = project_parser.add_subparsers(title="Subcommand", dest="subcommand")
     project_subparsers.add_parser('n', aliases=['new'], help='Create new project')
 
     # Subparser for showing stats
-    stats_parser = subparsers.add_parser("s", aliases=["stats"], help="Show stats")
+    stats_parser = subparsers.add_parser("s", aliases=["stat", "stats"], help="Show stats")
+
+    # Subparser for weekly review
+    review_parser = subparsers.add_parser("r", aliases=["review"], help="Review GTD")
 
     args = parser.parse_args()
 
-    if args.command in ['a', 'action']:
+    if args.command in ['a', 'action', 'actions']:
         manage_actions(args, action_parser)
-    elif args.command in ['p', 'project']:
+    elif args.command in ['p', 'project', 'projects']:
         manage_projects(args, project_parser)
-    elif args.command in ['s', 'stats']:
+    elif args.command in ['s', 'stat', 'stats']:
         show_stats(args, stats_parser)
+    elif args.command in ['r', 'review']:
+        run_review(args, review_parser)
     else:
         parser.print_help()
 
