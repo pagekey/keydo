@@ -86,6 +86,16 @@ def manage_projects(args, parser):
             'category': category,
         })
         set_config(config)
+    elif args.subcommand in ['d', 'delete']:
+        print("Delete project")
+        id_to_delete = int(input("Enter project id: ").replace('P', ''))
+        config = get_config()
+        projects_filtered = []
+        for project in config['projects']:
+            if project['id'] != id_to_delete:
+                projects_filtered.append(project)
+        config['projects'] = projects_filtered
+        set_config(config)
     else:
         print("ID\tProject\t\tCategory\tUpdated")
         print("--------------------------------------------------")
@@ -148,6 +158,7 @@ def main():
     project_parser = subparsers.add_parser("p", aliases=["project", "projects"], help="Manage projects")
     project_subparsers = project_parser.add_subparsers(title="Subcommand", dest="subcommand")
     project_subparsers.add_parser('n', aliases=['new'], help='Create new project')
+    project_subparsers.add_parser('d', aliases=['delete'], help='Delete project')
 
     # Subparser for showing stats
     stats_parser = subparsers.add_parser("s", aliases=["stat", "stats"], help="Show stats")
