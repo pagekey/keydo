@@ -45,7 +45,7 @@ def manage_actions(args, parser):
             'context': context,
         })
         set_config(config)
-    elif args.subcommand in ['l', 'list']:
+    else:
         print("Next Actions")
         print()
         contexts = set()
@@ -62,16 +62,11 @@ def manage_actions(args, parser):
                             project = p
                 print(f"✅ A{action['id']}) {action['name']} ({project['name']})")
             print()
-    else:
-        parser.print_help()
 
 
 def manage_projects(args, parser):
     config = get_config()
-    if args.subcommand in ['l', 'list']:
-        for project in config['projects']:
-            print(f"✅ P{project['id']}) {project['name']} - {project['updated']}")
-    elif args.subcommand in ['n','new']:
+    if args.subcommand in ['n','new']:
         id = 1
         while id_exists(config['actions'], id):
             id += 1
@@ -83,11 +78,11 @@ def manage_projects(args, parser):
             'name': name,
             'outcome': outcome,
             'updated': last_update,
-            'action': None,
         })
         set_config(config)
     else:
-        parser.print_help()
+        for project in config['projects']:
+            print(f"✅ P{project['id']}) {project['name']} - {project['updated']}")
 
 
 def show_stats(args, parser):
@@ -108,13 +103,11 @@ def main():
     # Subparser for managing actions
     action_parser = subparsers.add_parser("a", aliases=["action"], help="Manage actions")
     action_subparsers = action_parser.add_subparsers(title="Subcommand", dest="subcommand")
-    action_subparsers.add_parser('l', aliases=['list'], help='List actions')
     action_subparsers.add_parser('n', aliases=['new'], help='Create new action')
 
     # Subparser for managing projects
     project_parser = subparsers.add_parser("p", aliases=["project"], help="Manage projects")
     project_subparsers = project_parser.add_subparsers(title="Subcommand", dest="subcommand")
-    project_subparsers.add_parser('l', aliases=['list'], help='List projects')
     project_subparsers.add_parser('n', aliases=['new'], help='Create new project')
 
     # Subparser for showing stats
