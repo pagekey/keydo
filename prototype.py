@@ -53,14 +53,18 @@ def manage_actions(args, parser):
             contexts.add(action['context'])
         for context in contexts:
             matches = [x for x in config['actions'] if x['context'] == context]
-            print(f"Context: {context} ({len(matches)})")
+            print(f"Context: {context}")
+            print()
+            print("ID\tName\t\tProject")
+            print("----------------------------------")
             for action in matches:
                 project = {'name': ''}
                 if action['project']:
                     for p in config['projects']:
                         if p['id'] == int(action['project']):
                             project = p
-                print(f"✅ A{action['id']}) {action['name']} ({project['name']})")
+                print(f"A{action['id']}\t{action['name']}\t{project['name']}")
+            print()
             print()
 
 
@@ -81,8 +85,10 @@ def manage_projects(args, parser):
         })
         set_config(config)
     else:
+        print("ID\tProject\t\tUpdated")
+        print("----------------------------------")
         for project in config['projects']:
-            print(f"✅ P{project['id']}) {project['name']} - {project['updated']}")
+            print(f"P{project['id']}\t{project['name']}\t{project['updated']}")
 
 
 def show_stats(args, parser):
