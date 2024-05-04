@@ -45,6 +45,16 @@ def manage_actions(args, parser):
             'context': context,
         })
         set_config(config)
+    elif args.subcommand in ['d', 'delete']:
+        print("Delete action")
+        id_to_delete = int(input("Enter action id: ").upper().replace('A', ''))
+        config = get_config()
+        actions_filtered = []
+        for action in config['actions']:
+            if action['id'] != id_to_delete:
+                actions_filtered.append(action)
+        config['actions'] = actions_filtered
+        set_config(config)
     else:
         print("Next Actions")
         print()
@@ -88,7 +98,7 @@ def manage_projects(args, parser):
         set_config(config)
     elif args.subcommand in ['d', 'delete']:
         print("Delete project")
-        id_to_delete = int(input("Enter project id: ").replace('P', ''))
+        id_to_delete = int(input("Enter project id: ").upper().replace('P', ''))
         config = get_config()
         projects_filtered = []
         for project in config['projects']:
@@ -153,6 +163,7 @@ def main():
     action_parser = subparsers.add_parser("a", aliases=["action", "actions"], help="Manage actions")
     action_subparsers = action_parser.add_subparsers(title="Subcommand", dest="subcommand")
     action_subparsers.add_parser('n', aliases=['new'], help='Create new action')
+    action_subparsers.add_parser('d', aliases=['delete'], help='Delete action')
 
     # Subparser for managing projects
     project_parser = subparsers.add_parser("p", aliases=["project", "projects"], help="Manage projects")
