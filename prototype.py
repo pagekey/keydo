@@ -76,19 +76,21 @@ def manage_projects(args, parser):
             id += 1
         name = input("Enter name of project: ")
         outcome = input("Describe desired outcome: ")
+        category = input("Enter category: ")
         last_update = datetime.datetime.now().strftime("%Y-%m-%d")
         config['projects'].append({
             'id': id,
             'name': name,
             'outcome': outcome,
             'updated': last_update,
+            'category': category,
         })
         set_config(config)
     else:
-        print("ID\tProject\t\tUpdated")
-        print("----------------------------------")
+        print("ID\tProject\t\tCategory\tUpdated")
+        print("--------------------------------------------------")
         for project in config['projects']:
-            print(f"P{project['id']}\t{project['name']}\t{project['updated']}")
+            print(f"P{project['id']}\t{project['name']}\t{project['category']}\t{project['updated']}")
 
 
 def show_stats(args, parser):
