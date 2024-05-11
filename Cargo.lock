@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "rust-experiment"
+name = "keydo"
 version = "0.1.0"

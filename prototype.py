@@ -149,6 +149,7 @@ def run_review(args, parser):
             pass
             print("keeping")
         ## TODO set next action if not exists
+        # TODO: either way, update last updated date
 
 def main():
     if not os.path.exists(KEYDO_FILE):
